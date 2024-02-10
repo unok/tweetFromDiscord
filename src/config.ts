@@ -2,14 +2,14 @@ import { configDotenv } from 'dotenv'
 
 configDotenv()
 export const config: {
-  discord: { token: string; botUserId: string; channel: string }
+  discord: { token: string; botUserId: string; channelId: string }
   twitter: { userId: string; apiKey: string; apiKeySecret: string; accessToken: string; accessTokenSecret: string }
   bluesky: { identifier: string; appPassword: string }
 } = {
   discord: {
     token: process.env.DISCORD_TOKEN,
     botUserId: process.env.DISCORD_BOT_USER_ID,
-    channel: process.env.DISCORD_CHANNEL_ID,
+    channelId: process.env.DISCORD_CHANNEL_ID,
   },
   twitter: {
     userId: process.env.TWITTER_USER_ID,

@@ -26,6 +26,7 @@ describe('メッセージの受け取り', () => {
     const message = {
       id: '1234567890',
       author: mockUser as User,
+      channelId: '5678901234',
       content: 'test message',
       mentions: mentions,
     } as Message
@@ -43,7 +44,12 @@ describe('メッセージのフォーマット', () => {
       valueOf: () => 'testUser',
     }
 
-    const message = { author: mockUser as User, content: '  test message  　 ', mentions: mentions } as Message
+    const message = {
+      author: mockUser as User,
+      content: '  test message  　 ',
+      channelId: '5678901234',
+      mentions: mentions,
+    } as Message
     expect(messageHandler(message)).toStrictEqual({ id: message.id, message: 'test message', tweet: true })
   })
 })
@@ -60,6 +66,7 @@ describe('メンション入のメッセージは投稿しない', () => {
     const userId = mockUser.id ?? 'unknownUserId'
     const message: Message = {
       id: '1234567890',
+      channelId: '5678901234',
       content: '<@0000000> test message',
       author: mockUser as User,
       mentions: { ...mentions, users: new Collection<string, User>([[userId, mockUser as User]]) } as MessageMentions,
@@ -84,6 +91,7 @@ describe('メンション入のメッセージは投稿しない', () => {
     const message: Message = {
       id: '1234567890',
       author: mockUser as User,
+      channelId: '5678901234',
       content: '@here test message',
       mentions: {
         ...mentions,
@@ -110,6 +118,7 @@ describe('メンション入のメッセージは投稿しない', () => {
     const message: Message = {
       id: '1234567890',
       author: mockUser as User,
+      channelId: '5678901234',
       content: '<@&0000000> test message',
       mentions: {
         ...mentions,
@@ -121,6 +130,7 @@ describe('メンション入のメッセージは投稿しない', () => {
   it('Everyoneメンション入のメッセージは投稿しない', () => {
     const message: Message = {
       id: '1234567890',
+      channelId: '5678901234',
       content: '@everyone test message',
       mentions: {
         ...mentions,
@@ -143,6 +153,7 @@ describe('自分のメッセージには反応しない', () => {
     const message: Message = {
       id: '1234567890',
       author: mockUser as User,
+      channelId: '5678901234',
       content: 'test message',
       mentions: { ...mentions } as MessageMentions,
     } as Partial<Message<boolean>> as Message<boolean>
@@ -160,9 +171,39 @@ describe('自分のメッセージには反応しない', () => {
     const message: Message = {
       id: '1234567890',
       content: 'test message',
+      channelId: '5678901234',
       author: mockUser as User,
       mentions: { ...mentions } as MessageMentions,
     } as Partial<Message<boolean>> as Message<boolean>
     expect(messageHandler(message)).toStrictEqual({ id: message.id, message: 'test message', tweet: true })
+  })
+})
+
+describe('特定のチャンネルのみ反応する', () => {
+  const mockUser: Partial<User> = {
+    id: 'testUser',
+    username: 'testuser',
+    tag: 'testUser#00001',
+    toString: () => '<@testUser>',
+    valueOf: () => 'testUser',
+  }
+
+  it('特定のチャンネルなので反応する', () => {
+    const message = {
+      author: mockUser as User,
+      channelId: '5678901234',
+      content: 'test message',
+      mentions: mentions,
+    } as Message
+    expect(messageHandler(message)).toStrictEqual({ id: message.id, message: 'test message', tweet: true })
+  })
+  it('特定のチャンネルなので反応する', () => {
+    const message = {
+      author: mockUser as User,
+      channelId: '1234567890',
+      content: 'test message',
+      mentions: mentions,
+    } as Message
+    expect(messageHandler(message)).toStrictEqual({ id: message.id, message: 'test message', tweet: false })
   })
 })

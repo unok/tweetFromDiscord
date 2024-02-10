@@ -14,7 +14,11 @@ export const messageHandler = (message: DiscordMessage): Message => {
     .replace(removeMention, '')
     .replace(new RegExp(`^${whiteSpacesRegex}`), '')
     .replace(new RegExp(`${whiteSpacesRegex}$`), '')
-  return { id: message.id, message: formatedMessage, tweet: !hasMention(message) && !isBotMessage(message) }
+  return {
+    id: message.id,
+    message: formatedMessage,
+    tweet: isTargetChannel(message) && !hasMention(message) && !isBotMessage(message),
+  }
 }
 
 const hasMention = (message: DiscordMessage): boolean => {
@@ -27,6 +31,10 @@ const hasMention = (message: DiscordMessage): boolean => {
 }
 
 const isBotMessage = (message: DiscordMessage): boolean => {
-  console.log(message.author.id, config.discord.botUserId)
   return message.author.id === config.discord.botUserId
+}
+
+const isTargetChannel = (message: DiscordMessage): boolean => {
+  console.log(message.channelId, config.discord.channelId)
+  return message.channelId === config.discord.channelId
 }
