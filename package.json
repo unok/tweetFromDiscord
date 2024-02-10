@@ -1,0 +1,20 @@
+{
+  "name": "tweet",
+  "module": "src/index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/web": "^0.0.138",
+    "bun-types": "latest",
+    "jest": "^29.7.0",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@atproto/api": "^0.9.6",
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.4.1",
+    "twitter-api-v2": "^1.16.0"
+  }
+}
