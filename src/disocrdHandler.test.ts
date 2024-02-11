@@ -4,8 +4,8 @@
    - メッセージを待つ
 */
 import { describe, it, expect } from 'bun:test'
-import { messageHandler } from '@discordHandler'
-import { Channel, Collection, Message, MessageMentions, Role, User } from 'discord.js'
+import { messageHandler, isTargetReaction } from '@discordHandler'
+import { Channel, Collection, Message, MessageMentions, MessageReaction, Role, User } from 'discord.js'
 const mentions: Partial<MessageMentions> = {
   users: new Collection<string, User>([]),
   channels: new Collection<string, Channel>([]),
@@ -205,5 +205,16 @@ describe('特定のチャンネルのみ反応する', () => {
       mentions: mentions,
     } as Message
     expect(messageHandler(message)).toStrictEqual({ id: message.id, message: 'test message', tweet: false })
+  })
+})
+
+describe('リアクションが指定したリアクションかチェック', () => {
+  it('指定したリアクションである', () => {
+    const reaction = { emoji: { name: '✅' } } as MessageReaction
+    expect(isTargetReaction(reaction)).toBe(true)
+  })
+  it('指定したリアクションではない', () => {
+    const reaction = { emoji: { name: '⭐' } } as MessageReaction
+    expect(isTargetReaction(reaction)).toBe(false)
   })
 })

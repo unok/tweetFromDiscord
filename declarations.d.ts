@@ -3,6 +3,7 @@ namespace NodeJS {
     readonly DISCORD_TOKEN: string
     readonly DISCORD_BOT_USER_ID: string
     readonly DISCORD_CHANNEL_ID: string
+    readonly DISCORD_TARGET_REACTION: string
     readonly TWITTER_USER_ID: string
     readonly TWITTER_API_KEY: string
     readonly TWITTER_API_KEY_SECRET: string

@@ -1,5 +1,5 @@
 import { config } from '@config'
-import { Message as DiscordMessage } from 'discord.js'
+import { Message as DiscordMessage, MessageReaction, PartialMessageReaction } from 'discord.js'
 
 const whiteSpacesRegex = '[\\s　]+'
 const removeMention = /\s*(\<@&?\d+\>|@here|@everyone)\s*/
@@ -37,4 +37,8 @@ const isBotMessage = (message: DiscordMessage): boolean => {
 const isTargetChannel = (message: DiscordMessage): boolean => {
   console.log(message.channelId, config.discord.channelId)
   return message.channelId === config.discord.channelId
+}
+
+export const isTargetReaction = (reaction: MessageReaction | PartialMessageReaction) => {
+  return reaction.emoji.name === config.discord.targetReaction
 }
