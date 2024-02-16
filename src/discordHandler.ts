@@ -1,6 +1,8 @@
 import { config } from '@config'
 import { Message as DiscordMessage, MessageReaction, PartialMessageReaction } from 'discord.js'
 
+const limitLength = 140
+
 const whiteSpacesRegex = '[\\s　]+'
 const removeMention = /\s*(\<@&?\d+\>|@here|@everyone)\s*/
 export type Message = {
@@ -14,6 +16,11 @@ export const messageHandler = (message: DiscordMessage): Message => {
     .replace(removeMention, '')
     .replace(new RegExp(`^${whiteSpacesRegex}`), '')
     .replace(new RegExp(`${whiteSpacesRegex}$`), '')
+
+  if (isOverLengthLimit(formatedMessage)) {
+    throw new Error(`文字数が${limitLength}文字を超えています: ${formatedMessage.length}文字です`)
+  }
+
   return {
     id: message.id,
     message: formatedMessage,
@@ -41,4 +48,8 @@ const isTargetChannel = (message: DiscordMessage): boolean => {
 
 export const isTargetReaction = (reaction: MessageReaction | PartialMessageReaction) => {
   return reaction.emoji.name === config.discord.targetReaction
+}
+
+const isOverLengthLimit = (message: string): boolean => {
+  return message.length > limitLength
 }

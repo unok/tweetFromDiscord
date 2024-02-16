@@ -17,21 +17,34 @@ discordClient.on(Events.MessageReactionAdd, async (reaction) => {
     return
   }
   const message = reaction.message as Message
-  const result = messageHandler(message)
-  console.log(result)
-  if (!result.tweet) return
+  try {
+    const result = messageHandler(message)
+    console.log(result)
+    if (!result.tweet) return
 
-  const tweetUrl = await postTweet(result)
-  message.reply({
-    content: `Posted on Twitter: ${tweetUrl}`,
-  })
-  await message.react('🐦')
+    const tweetUrl = await postTweet(result)
+    message.reply({
+      content: `Posted on Twitter: ${tweetUrl}`,
+    })
+    await message.react('🐦')
 
-  const blueskyUrl = await postBluesky(result)
-  message.reply({
-    content: `Posted on BlueSky: ${blueskyUrl}`,
-  })
-  await message.react('🦋')
+    const blueskyUrl = await postBluesky(result)
+    message.reply({
+      content: `Posted on BlueSky: ${blueskyUrl}`,
+    })
+    await message.react('🦋')
+  } catch (e: unknown) {
+    console.log(e)
+    if (e instanceof Error) {
+      message.reply({
+        content: e.message,
+      })
+    } else {
+      message.reply({
+        content: 'エラーが発生しました',
+      })
+    }
+  }
 })
 
 discordClient.login(config.discord.token)
