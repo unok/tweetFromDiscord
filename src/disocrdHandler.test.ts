@@ -218,3 +218,43 @@ describe('リアクションが指定したリアクションかチェック', (
     expect(isTargetReaction(reaction)).toBe(false)
   })
 })
+
+describe('文字数チェック', () => {
+  const mockUser: Partial<User> = {
+    id: 'testUser',
+    username: 'testuser',
+    tag: 'testUser#0000',
+    toString: () => '<@testUser>',
+    valueOf: () => 'testUser',
+  }
+
+  it('140文字以内であればOK', () => {
+    const longMessage = 'あiうeおaいuえo'.repeat(14)
+    const message: Message = {
+      id: '1234567890',
+      author: mockUser as User,
+      channelId: '5678901234',
+      content: longMessage,
+      mentions: { ...mentions } as MessageMentions,
+    } as Partial<Message<boolean>> as Message<boolean>
+
+    expect(messageHandler(message)).toStrictEqual({
+      id: message.id,
+      message: longMessage,
+      tweet: true,
+    })
+  })
+  it('140文字超えるとNG', () => {
+    const longMessage = `${'あiうeおaいuえo'.repeat(14)}か`
+    const message: Message = {
+      id: '1234567890',
+      author: mockUser as User,
+      channelId: '5678901234',
+      content: longMessage,
+      mentions: { ...mentions } as MessageMentions,
+    } as Partial<Message<boolean>> as Message<boolean>
+    expect(() => {
+      messageHandler(message)
+    }).toThrow(/文字数が140文字を超えています: 141文字です/)
+  })
+})
