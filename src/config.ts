@@ -7,10 +7,10 @@ export const config: {
   bluesky: { identifier: string; appPassword: string }
 } = {
   discord: {
-    token: process.env.DISCORD_TOKEN,
-    botUserId: process.env.DISCORD_BOT_USER_ID,
-    channelId: process.env.DISCORD_CHANNEL_ID,
-    targetReaction: process.env.DISCORD_TARGET_REACTION,
+    token: process.env.DISCORD_TWEET_TOKEN,
+    botUserId: process.env.DISCORD_TWEET_BOT_USER_ID,
+    channelId: process.env.DISCORD_TWEET_CHANNEL_ID,
+    targetReaction: process.env.DISCORD_TWEET_TARGET_REACTION,
   },
   twitter: {
     userId: process.env.TWITTER_USER_ID,
